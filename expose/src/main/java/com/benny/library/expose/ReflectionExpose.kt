@@ -52,9 +52,11 @@ class ExposeInvocationHandler (
             targetClass.getMethod(method.name, * method.parameterTypes)
         }
 
-        val result = args?.let {
+        val result = if (args != null) {
             exposeMethod.invoke(target, *it)
-        } ?: exposeMethod.invoke(target)
+        } else {
+            exposeMethod.invoke(target)
+        }
 
         return if (ExposeOf::class.java.isAssignableFrom(method.returnType)) {
             wrap(exposeMethod.returnType as Class<*>, result, method.returnType)
